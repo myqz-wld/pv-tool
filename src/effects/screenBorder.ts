@@ -12,6 +12,7 @@ export class ScreenBorder extends BaseEffect {
   private drawn = false;
   private lastW = 0;
   private lastH = 0;
+  private lastBg = '';
 
   protected setup(): void {
     this.graphics = new PIXI.Graphics();
@@ -19,10 +20,12 @@ export class ScreenBorder extends BaseEffect {
   }
 
   update(ctx: UpdateContext): void {
-    if (this.drawn && this.lastW === ctx.screenWidth && this.lastH === ctx.screenHeight) return;
+    const bg = ctx.palette.background;
+    if (this.drawn && this.lastW === ctx.screenWidth && this.lastH === ctx.screenHeight && this.lastBg === bg) return;
     this.drawn = true;
     this.lastW = ctx.screenWidth;
     this.lastH = ctx.screenHeight;
+    this.lastBg = bg;
 
     const g = this.graphics;
     g.clear();

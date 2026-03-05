@@ -31,8 +31,10 @@ export class VerticalSubText extends BaseEffect {
       this.rebuildText(ctx);
     }
 
-    // Fade animation
+    // Update color and fade animation
+    const color = resolveColor(this.config.color ?? '#ffffff', this.palette);
     for (const t of this.textObjs) {
+      t.style.fill = color;
       t.alpha = 0.7 + Math.sin(ctx.time * 0.5) * 0.1;
     }
   }

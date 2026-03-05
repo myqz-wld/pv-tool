@@ -95,11 +95,13 @@ export class FormulaText extends BaseEffect {
   update(ctx: UpdateContext): void {
     this.build(ctx.screenWidth, ctx.screenHeight);
 
+    const color = resolveColor(this.config.color ?? '$text', this.palette);
+
     if (this.markers) {
       this.markers.clear();
-      const color = resolveColor(this.config.color ?? '$text', this.palette);
 
       for (const el of this.elements) {
+        el.textObj.style.fill = color;
         const spd = ctx.animationSpeed;
         el.textObj.alpha = el.baseAlpha + Math.sin(ctx.time * 0.2 * spd + el.phase) * 0.06;
 

@@ -13,6 +13,7 @@ import { hystericNightTemplate } from './hystericNight';
 import { cyberGrungeTemplate } from './cyberGrunge';
 import { spiderWebTemplate } from './spiderWeb';
 import { staggeredTextTplTemplate } from './staggeredTextTpl';
+import { calmVillainTemplate } from './calmVillain';
 
 export const templates: TemplateConfig[] = [
   blueBoldTemplate,          // 0  蓝色冲击
@@ -26,6 +27,7 @@ export const templates: TemplateConfig[] = [
   hystericNightTemplate,     // 8  歇斯底里之夜
   spiderWebTemplate,         // 9  蛛网
   staggeredTextTplTemplate,  // 10 错落文字
+  calmVillainTemplate,       // 11 冷静的反派
 ];
 
 export function getTemplate(name: string): TemplateConfig | undefined {

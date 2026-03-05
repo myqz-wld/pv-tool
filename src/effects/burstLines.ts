@@ -49,6 +49,6 @@ export class BurstLines extends BaseEffect {
       const ey = cy + Math.sin(angle) * outerRadius;
       g.moveTo(sx, sy).lineTo(ex, ey);
     }
-    g.stroke({ color, width: 1, alpha });
+    g.stroke({ color, width: this.config.lineWidth ?? 1, alpha });
   }
 }

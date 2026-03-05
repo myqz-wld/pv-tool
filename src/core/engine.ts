@@ -194,14 +194,17 @@ export class PVEngine {
 
   set effectOpacity(val: number) {
     this._effectOpacity = val;
-    this.effectsRoot.alpha = val;
+    this.bgFill.alpha = val;
   }
   get effectOpacity() { return this._effectOpacity; }
 
   private updateBgFill() {
     if (!this.bgFill) return;
+    const w = this.app.screen.width;
+    const h = this.app.screen.height;
+    const pad = Math.max(w, h) * 0.5;
     this.bgFill.clear();
-    this.bgFill.rect(0, 0, this.app.screen.width, this.app.screen.height);
+    this.bgFill.rect(-pad, -pad, w + pad * 2, h + pad * 2);
     this.bgFill.fill({ color: this.palette.background });
   }
 

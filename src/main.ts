@@ -31,12 +31,13 @@ app.innerHTML = `
           <button class="swatch" data-color="#1122ee" title="蓝" style="background:#1122ee"></button>
           <button class="swatch" data-color="#8b1a1a" title="红" style="background:#8b1a1a"></button>
           <button class="swatch" data-color="#EEDD11" title="黄" style="background:#EEDD11"></button>
+          <button class="swatch" data-color="#f5c6d0" title="粉" style="background:#f5c6d0"></button>
         </div>
       </div>
 
       <div class="control-group">
         <label>文字 Text（用 / 分段）</label>
-        <input type="text" id="text-input" placeholder="春を告げる/夜を越えて" value="春を告げる/夜を越えて/踊れ踊れ">
+        <input type="text" id="text-input" placeholder="深夜東京/の6畳半夢" value="深夜東京/の6畳半夢/を見てた/灯りの灯らない蛍光灯/明日には消えてる電脳城/に/開幕戦/打ち上げて/いなくなんないよね/ここには誰もいない/ここには誰もいないから">
       </div>
 
       <div class="control-group">
@@ -55,7 +56,7 @@ app.innerHTML = `
       </div>
 
       <div class="control-group">
-        <label>效果透明度 <span id="opacity-val">100%</span></label>
+        <label>背景透明度 <span id="opacity-val">100%</span></label>
         <input type="range" id="opacity-slider" min="0" max="1" step="0.05" value="1">
       </div>
 
@@ -154,7 +155,7 @@ const engine = new PVEngine();
 const container = document.getElementById('pv-container')!;
 
 engine.init(container).then(() => {
-  engine.setText('春を告げる/夜を越えて/踊れ踊れ');
+  engine.setText('深夜東京/の6畳半夢/を見てた/灯りの灯らない蛍光灯/明日には消えてる電脳城/に/開幕戦/打ち上げて/いなくなんないよね/ここには誰もいない/ここには誰もいないから');
   engine.loadTemplate(templates[0]);
   templateSelect.value = '0';
   syncSpeedSlider();
@@ -401,6 +402,9 @@ mediaApplyBtn.addEventListener('click', async () => {
     const mode = mediaModeSelect.value as 'fit' | 'free';
     try {
       await engine.addMedia(pendingFile, mode);
+      engine.effectOpacity = 0.7;
+      opacitySlider.value = '0.7';
+      opacityVal.textContent = '70%';
     } catch (err) {
       console.warn('[PV] Media load failed:', err);
     }
@@ -416,7 +420,7 @@ const recTimer = document.getElementById('rec-timer')!;
 const templateSlugs = [
   'blueBold', 'kineticSplit', 'bluePlane', 'cyberGrunge', 'geometric',
   'rainCity', 'cyberpunkHud', 'emotionCinema', 'hystericNight',
-  'spiderWeb', 'staggeredText',
+  'spiderWeb', 'staggeredText', 'calmVillain',
 ];
 
 function getTemplateSlug(): string {

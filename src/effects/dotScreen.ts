@@ -13,8 +13,13 @@ import { resolveColor } from '../core/types';
 export class DotScreen extends BaseEffect {
   readonly name = 'dotScreen';
   private tiling!: PIXI.TilingSprite;
+  private lastBg = '';
 
   protected setup(): void {
+    this.buildTile();
+  }
+
+  private buildTile(): void {
     const spacing = this.config.spacing ?? 8;
     const dotRadius = this.config.dotRadius ?? 1.5;
     const color = resolveColor(this.config.color ?? '$text', this.palette);
@@ -34,13 +39,22 @@ export class DotScreen extends BaseEffect {
     ctx.fill();
 
     const tex = PIXI.Texture.from(canvas);
-    this.tiling = new PIXI.TilingSprite({ texture: tex, width: 1920, height: 1080 });
-    this.tiling.rotation = angle;
-    this.tiling.anchor.set(0.5);
-    this.container.addChild(this.tiling);
+    if (this.tiling) {
+      this.tiling.texture = tex;
+    } else {
+      this.tiling = new PIXI.TilingSprite({ texture: tex, width: 1920, height: 1080 });
+      this.tiling.rotation = angle;
+      this.tiling.anchor.set(0.5);
+      this.container.addChild(this.tiling);
+    }
   }
 
   update(ctx: UpdateContext): void {
+    const bg = ctx.palette.background;
+    if (this.lastBg !== bg) {
+      this.lastBg = bg;
+      this.buildTile();
+    }
     this.tiling.width = ctx.screenWidth * 1.5;
     this.tiling.height = ctx.screenHeight * 1.5;
     this.tiling.x = ctx.screenWidth / 2;

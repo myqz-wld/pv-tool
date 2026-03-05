@@ -25,6 +25,7 @@ export class CompositionGuides extends BaseEffect {
   private drawn = false;
   private lastW = 0;
   private lastH = 0;
+  private lastBg = '';
 
   protected setup(): void {
     this.g = new PIXI.Graphics();
@@ -32,10 +33,15 @@ export class CompositionGuides extends BaseEffect {
   }
 
   update(ctx: UpdateContext): void {
-    if (this.drawn && this.lastW === ctx.screenWidth && this.lastH === ctx.screenHeight) return;
+    const rotSpeed = this.config.rotSpeed ?? 0;
+    const needsRedraw = rotSpeed !== 0;
+
+    const bg = ctx.palette.background;
+    if (!needsRedraw && this.drawn && this.lastW === ctx.screenWidth && this.lastH === ctx.screenHeight && this.lastBg === bg) return;
     this.drawn = true;
     this.lastW = ctx.screenWidth;
     this.lastH = ctx.screenHeight;
+    this.lastBg = bg;
 
     const g = this.g;
     g.clear();
@@ -47,6 +53,12 @@ export class CompositionGuides extends BaseEffect {
     const lw = this.config.lineWidth ?? 1;
     const guides: GuideName[] = this.config.guides ?? ['goldenSpiral'];
     const spiralQuadrant = this.config.spiralQuadrant ?? 0;
+
+    if (rotSpeed !== 0) {
+      this.container.pivot.set(w / 2, h / 2);
+      this.container.position.set(w / 2, h / 2);
+      this.container.rotation = ctx.time * rotSpeed * ctx.animationSpeed;
+    }
 
     for (const guide of guides) {
       switch (guide) {
