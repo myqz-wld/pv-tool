@@ -2,7 +2,7 @@
 // Licensed under AGPL-3.0. For commercial use, see COMMERCIAL.md
 
 import * as PIXI from 'pixi.js';
-import type { TemplateConfig, UpdateContext, ColorPalette, LayerType, MotionTargetInfo } from './types';
+import type { TemplateConfig, UpdateContext, ColorPalette, LayerType, MotionTargetInfo, LyricLine } from './types';
 import { createEffect, BaseEffect } from '../effects';
 import { extractDominantColors } from './colorExtractor';
 import { MediaOutlineRenderer } from './mediaOutline';
@@ -26,11 +26,14 @@ export class PVEngine {
   };
   private currentTemplate: TemplateConfig | null = null;
   private userText = '';
-  private startTime = 0;
 
   private _animationSpeed = 2;
   private _motionIntensity = 1;
   private textSegments: string[] = ['春を告げる'];
+  private lyricTimeline: LyricLine[] | null = null;
+  private lyricOffsetSeconds = 0;
+  private lyricCursor = 0;
+  private lastLyricTime = -1;
   private _segmentDuration = 3;
   private _srtTimeline: { startMs: number; endMs: number; text: string }[] | null = null;
   private _effectOpacity = 1;
@@ -67,14 +70,16 @@ export class PVEngine {
   private _loading = false;
   private _bgColorOverride: string | null = null;
   private _tick = 0;
+  private _playbackTime = 0;
+  private _paused = false;
+  private _time = 0;
+  private _lastFrameTime = 0;
 
   constructor() {
     this.app = new PIXI.Application();
     this.hueFilter = new PIXI.ColorMatrixFilter();
     this.glitchFilter = new GlitchFilter();
   }
-
-  private static readonly _solaris = [115,111,108,97,114,105,115];
 
   async init(parent: HTMLElement) {
     this._nativeDPR = Math.min(window.devicePixelRatio || 1, 3);
@@ -111,14 +116,45 @@ export class PVEngine {
       this.effectsRoot.addChild(container);
     }
 
-    this.startTime = performance.now();
+    this._lastFrameTime = performance.now();
 
     this.app.stage.filters = [this.hueFilter, this.glitchFilter];
 
     this.app.ticker.add((ticker) => {
-      const time = (performance.now() - this.startTime) / 1000;
-      this.update(time, ticker.deltaTime / 60);
+      const now = performance.now();
+      const dt = (now - this._lastFrameTime) / 1000;
+      this._lastFrameTime = now;
+
+      if (!this._paused) {
+        if (this.beat.isAudioMode) {
+          this._time = this.beat.currentTime;
+        } else {
+          this._time += dt;
+        }
+      }
+
+      this.update(this._time, ticker.deltaTime / 60);
     });
+  }
+
+  get paused() { return this._paused; }
+
+  pause() {
+    this._paused = true;
+    this.beat.pause();
+  }
+
+  resume() {
+    this._paused = false;
+    this._lastFrameTime = performance.now();
+    this.beat.resume();
+  }
+
+  seek(time: number) {
+    this._time = Math.max(0, time);
+    if (this.beat.isAudioMode) {
+      this.beat.seek(this._time);
+    }
   }
 
   loadTemplate(template: TemplateConfig) {
@@ -180,6 +216,7 @@ export class PVEngine {
   }
 
   setText(text: string) {
+    this.clearLyricTimeline();
     this.userText = text;
     this.textSegments = text
       .split('/')
@@ -204,6 +241,89 @@ export class PVEngine {
 
   setSrtTimeline(entries: { startMs: number; endMs: number; text: string }[] | null) {
     this._srtTimeline = entries;
+    if (entries && entries.length > 0) {
+      this.clearLyricTimeline();
+    }
+  }
+
+  setLyricTimeline(lines: LyricLine[]): void {
+    if (lines.length === 0) {
+      this.clearLyricTimeline();
+      return;
+    }
+
+    this._srtTimeline = null;
+    this.lyricTimeline = [...lines].sort((a, b) => a.time - b.time);
+    this.lyricCursor = 0;
+    this.lastLyricTime = -1;
+
+    this.userText = this.lyricTimeline[0].text;
+    this.textSegments = [this.userText];
+
+    if (this.currentTemplate) {
+      this.loadTemplate(this.currentTemplate);
+    }
+  }
+
+  clearLyricTimeline(): void {
+    this.lyricTimeline = null;
+    this.lyricCursor = 0;
+    this.lastLyricTime = -1;
+    this.lyricOffsetSeconds = 0;
+  }
+
+  get hasLyricTimeline(): boolean {
+    return !!this.lyricTimeline && this.lyricTimeline.length > 0;
+  }
+
+  get lyricLineCount(): number {
+    return this.lyricTimeline?.length ?? 0;
+  }
+
+  set lyricOffset(val: number) {
+    this.lyricOffsetSeconds = val;
+  }
+
+  get lyricOffset(): number {
+    return this.lyricOffsetSeconds;
+  }
+
+  private getDisplayText(time: number): string {
+    if (this._srtTimeline) {
+      const ms = time * 1000;
+      const entry = this._srtTimeline.find(e => ms >= e.startMs && ms < e.endMs);
+      return entry?.text ?? '';
+    }
+
+    if (!this.lyricTimeline || this.lyricTimeline.length === 0) {
+      const segIdx = this.textSegments.length > 1
+        ? Math.floor(time / this._segmentDuration) % this.textSegments.length
+        : 0;
+      return this.textSegments[segIdx] || '';
+    }
+
+    const t = Math.max(0, time + this.lyricOffsetSeconds);
+    if (t < this.lastLyricTime) {
+      this.lyricCursor = 0;
+    }
+    this.lastLyricTime = t;
+
+    while (
+      this.lyricCursor + 1 < this.lyricTimeline.length
+      && this.lyricTimeline[this.lyricCursor + 1].time <= t
+    ) {
+      this.lyricCursor++;
+    }
+
+    while (
+      this.lyricCursor > 0
+      && this.lyricTimeline[this.lyricCursor].time > t
+    ) {
+      this.lyricCursor--;
+    }
+
+    if (t < this.lyricTimeline[0].time) return '';
+    return this.lyricTimeline[this.lyricCursor].text;
   }
 
   set effectOpacity(val: number) {
@@ -577,17 +697,8 @@ export class PVEngine {
   }
 
   private update(time: number, deltaTime: number) {
-    let currentText: string;
-    if (this._srtTimeline) {
-      const ms = time * 1000;
-      const entry = this._srtTimeline.find(e => ms >= e.startMs && ms < e.endMs);
-      currentText = entry?.text ?? '';
-    } else {
-      const segIdx = this.textSegments.length > 1
-        ? Math.floor(time / this._segmentDuration) % this.textSegments.length
-        : 0;
-      currentText = this.textSegments[segIdx] || '';
-    }
+    const lyricClock = this.beat.isAudioMode ? this.beat.currentTime : time;
+    this._playbackTime = lyricClock;
 
     if (this.motionDetector && this.mediaElement instanceof HTMLVideoElement) {
       this.motionDetector.detect(this.mediaElement);
@@ -606,7 +717,7 @@ export class PVEngine {
       palette: this.palette,
       animationSpeed: this._animationSpeed,
       motionIntensity: this._motionIntensity,
-      currentText,
+      currentText: this.getDisplayText(lyricClock),
       beatIntensity: this.beat.getIntensity(time) * this._beatReactivity,
       motionTargets: this.motionTargets,
     };
@@ -663,6 +774,23 @@ export class PVEngine {
 
   get canvas(): HTMLCanvasElement {
     return this.app.canvas as HTMLCanvasElement;
+  }
+
+  get playbackTime(): number {
+    return this._playbackTime;
+  }
+
+  get timelineDuration(): number {
+    const audioDuration = this.beat.duration;
+    if (Number.isFinite(audioDuration) && audioDuration > 0) {
+      return audioDuration;
+    }
+
+    if (this.lyricTimeline && this.lyricTimeline.length > 0) {
+      return Math.max(this.lyricTimeline[this.lyricTimeline.length - 1].time + 2, 1);
+    }
+
+    return Math.max(this.textSegments.length * this._segmentDuration, this._segmentDuration);
   }
 
   destroy() {

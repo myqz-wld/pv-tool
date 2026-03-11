@@ -134,6 +134,12 @@ export class BeatProvider {
     return this.audioEl?.duration ?? 0;
   }
 
+  seek(time: number): void {
+    if (!this.audioEl) return;
+    const duration = Number.isFinite(this.audioEl.duration) ? this.audioEl.duration : Infinity;
+    this.audioEl.currentTime = Math.max(0, Math.min(time, duration));
+  }
+
   dispose(): void {
     this.audioEl?.pause();
     this.source?.disconnect();

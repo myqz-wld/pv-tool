@@ -3,6 +3,7 @@
 
 import './style.css';
 import { PVEngine } from './core/engine';
+import { parseLrc } from './core/lrc';
 import { templates } from './templates';
 import { effectCatalog } from './core/effectCatalog';
 import type { TemplateConfig } from './core/types';
@@ -50,6 +51,20 @@ app.innerHTML = `
       <div class="control-group">
         <label>${t('text_label')}</label>
         <textarea id="text-input" rows="1" placeholder="深夜東京/の6畳半夢">深夜東京/の6畳半夢/を見てた/灯りの灯らない蛍光灯/明日には消えてる電脳城/に/開幕戦/打ち上げて/いなくなんないよね/ここには誰もいない/ここには誰もいないから</textarea>
+      </div>
+
+      <div class="control-group">
+        <label>LRC</label>
+        <div class="file-pick">
+          <button class="btn btn-sm" id="lrc-pick-btn">导入 LRC</button>
+          <span class="file-pick-name" id="lrc-pick-name">未选择文件</span>
+          <input type="file" id="lrc-input" accept=".lrc,text/plain" hidden>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label>计时 Time</label>
+        <div id="playback-time">00:00 / 00:00</div>
       </div>
 
       <div class="control-group">
@@ -334,12 +349,62 @@ textInput.addEventListener('blur', () => {
 });
 
 let textTimer: ReturnType<typeof setTimeout>;
+
+function applyTextInput(rawText: string): void {
+  const hasTimestamps = /\[\d{1,2}:\d{2}/.test(rawText);
+  if (hasTimestamps) {
+    const parsed = parseLrc(rawText);
+    if (parsed.length > 0) {
+      engine.setLyricTimeline(parsed);
+      return;
+    }
+  }
+
+  engine.clearLyricTimeline();
+  engine.setText(rawText.replace(/\n/g, '/'));
+}
+
 textInput.addEventListener('input', () => {
   clearTimeout(textTimer);
   textTimer = setTimeout(() => {
-    engine.setText(textInput.value);
+    applyTextInput(textInput.value);
   }, 400);
 });
+
+const lrcInput = document.getElementById('lrc-input') as HTMLInputElement;
+const lrcPickBtn = document.getElementById('lrc-pick-btn') as HTMLButtonElement;
+const lrcPickName = document.getElementById('lrc-pick-name')!;
+
+lrcPickBtn.addEventListener('click', () => lrcInput.click());
+
+lrcInput.addEventListener('change', async () => {
+  const file = lrcInput.files?.[0];
+  if (!file) return;
+
+  lrcPickName.textContent = file.name;
+  const content = await file.text();
+  textInput.value = content;
+  applyTextInput(content);
+  lrcInput.value = '';
+});
+
+const playbackTimeEl = document.getElementById('playback-time')!;
+
+function formatClock(seconds: number): string {
+  const safe = Math.max(0, Math.floor(seconds));
+  const m = Math.floor(safe / 60);
+  const s = safe % 60;
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+function updatePlaybackTimer(): void {
+  const current = engine.playbackTime;
+  const total = engine.timelineDuration;
+  playbackTimeEl.textContent = `${formatClock(current)} / ${formatClock(total)}`;
+  requestAnimationFrame(updatePlaybackTimer);
+}
+
+requestAnimationFrame(updatePlaybackTimer);
 
 // Segment duration
 const segSlider = document.getElementById('seg-slider') as HTMLInputElement;

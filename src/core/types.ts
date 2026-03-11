@@ -73,6 +73,11 @@ export interface LyricPhrase {
   endTime: number;
 }
 
+export interface LyricLine {
+  time: number;
+  text: string;
+}
+
 export interface Segment {
   type: 'verse' | 'chorus' | 'bridge';
   startTime: number;
