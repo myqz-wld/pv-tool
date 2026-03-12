@@ -19,7 +19,7 @@ export class Planet extends BaseEffect {
     this.container.addChild(this.graphics);
   }
 
-  private buildGlow(cx: number, cy: number, size: number): void {
+  private buildGlow(_cx: number, _cy: number, size: number): void {
     if (this.glowBuilt) return;
     this.glowBuilt = true;
 

@@ -84,6 +84,7 @@ export const en: Record<LocaleKey, string> = {
   'tpl_staggeredText': 'Staggered Text',
   'tpl_calmVillain': 'Calm Villain',
   'tpl_girlyClouds': 'Pink Cloud',
+  'tpl_sweetPink': 'Sweet Pink',
   'tpl_flyMeToTheMoon': 'Fly Me to the Moon',
 
   // File picker
@@ -96,6 +97,15 @@ export const en: Record<LocaleKey, string> = {
   'import_btn': 'Import',
   'code_copied': 'Copied',
   'code_invalid': 'Invalid code',
+  'save_tpl': 'Save',
+  'delete_tpl': 'Delete',
+  'confirm': 'Confirm',
+  'cancel': 'Cancel',
+  'tpl_name_placeholder': 'Template name...',
+  'confirm_delete': 'Confirm delete',
+  'copy': 'Copy',
+  'share_code': 'Share Code',
+  'paste_code': 'Paste share code...',
 
   // Effect categories (used in custom panel)
   'ecat_背景': 'Background',
@@ -142,6 +152,7 @@ export const en: Record<LocaleKey, string> = {
   'fx_textStrip': 'Text Strip',
   'fx_textCards': 'Text Cards',
   'fx_bigOutlineText': 'Big Outline Text',
+  'fx_cuteOutlineText': 'Cute Outline Text',
   'fx_layeredText': 'Layered Text',
   'fx_glowTextCards': 'Glow Text Cards',
   'fx_verticalSubText': 'Vertical Sub Text',
@@ -173,5 +184,9 @@ export const en: Record<LocaleKey, string> = {
   'fx_jigsawGrid': 'Jigsaw Grid',
   'fx_edgeClouds': 'Edge Clouds',
   'fx_pinkStripes': 'Pink Stripes',
+  'fx_pinkGrid': 'Pink Grid',
+  'fx_scalloppedBorder': 'Scalloped Border',
+  'fx_pulsingCircle': 'Pulsing Circle',
+  'fx_starTrail': 'Star Trail',
   'fx_planet': 'Planet',
 };
