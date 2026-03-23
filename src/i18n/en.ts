@@ -47,6 +47,7 @@ export const en: Record<LocaleKey, string> = {
   'stop': 'STOP',
   'packing': 'Packing...',
   'alpha_export': 'Alpha Export',
+  'alpha_tip': 'For importing into AE/CapCut. Exports as a zipped PNG sequence. Skip if not needed.',
   'srt_import': 'SRT Timeline',
   'lrc_import': 'Import LRC',
   'timer_label': 'Time',

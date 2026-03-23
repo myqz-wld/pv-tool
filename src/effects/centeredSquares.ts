@@ -1,5 +1,5 @@
 // PV Tool — Copyright (c) 2026 DanteAlighieri13210914
-// Licensed under AGPL-3.0. For commercial use, see COMMERCIAL.md
+// Licensed under Non-Commercial License. See LICENSE for terms.
 
 import * as PIXI from 'pixi.js';
 import { BaseEffect } from './base';
@@ -16,12 +16,6 @@ interface SquareLayer {
 export class CenteredSquares extends BaseEffect {
   readonly name = 'centeredSquares';
   private layers: SquareLayer[] = [];
-  private charTexts: PIXI.Text[] = [];
-  private charBaseY: number[] = [];
-  private charContainer!: PIXI.Container;
-  private prevText = '';
-  private textChangeTime = -10;
-  private staggerY = 0;
 
   protected setup(): void {
     const outerSize = this.config.outerSize ?? 300;
@@ -30,8 +24,6 @@ export class CenteredSquares extends BaseEffect {
     const borderColor = resolveColor(this.config.borderColor ?? '$primary', this.palette);
     const midColor = resolveColor(this.config.midColor ?? '$primary', this.palette);
     const innerColor = resolveColor(this.config.innerColor ?? '$secondary', this.palette);
-
-    this.staggerY = this.config.staggerY ?? 18;
 
     // Layer 0: outer frame — no fill, irregular border widths
     const outerC = new PIXI.Container();
@@ -49,7 +41,7 @@ export class CenteredSquares extends BaseEffect {
     this.container.addChild(outerC);
     this.layers.push({ container: outerC, phaseOffset: 0, rotSpeed: 0.7, scalePhase: 0 });
 
-    // Layer 1: mid — black solid diamond
+    // Layer 1: mid — solid diamond
     const midC = new PIXI.Container();
     const midG = new PIXI.Graphics();
     const hm = midSize / 2;
@@ -59,7 +51,7 @@ export class CenteredSquares extends BaseEffect {
     this.container.addChild(midC);
     this.layers.push({ container: midC, phaseOffset: 1.0, rotSpeed: 0.55, scalePhase: 1.2 });
 
-    // Layer 2: inner — white solid diamond
+    // Layer 2: inner — solid diamond
     const innerC = new PIXI.Container();
     const innerG = new PIXI.Graphics();
     const hi = innerSize / 2;
@@ -68,47 +60,6 @@ export class CenteredSquares extends BaseEffect {
     innerC.addChild(innerG);
     this.container.addChild(innerC);
     this.layers.push({ container: innerC, phaseOffset: 2.0, rotSpeed: 0.4, scalePhase: 2.4 });
-
-    // Character container — difference blend for auto color inversion
-    this.charContainer = new PIXI.Container();
-    this.charContainer.blendMode = 'difference';
-    this.container.addChild(this.charContainer);
-  }
-
-  private rebuildChars(text: string, cx: number, cy: number, screenW: number): void {
-    this.charContainer.removeChildren().forEach(c => c.destroy());
-    this.charTexts = [];
-    this.charBaseY = [];
-
-    const chars = [...text];
-    if (chars.length === 0) return;
-
-    const spreadFrac = this.config.charSpreadFrac ?? 0.5;
-    const totalSpread = screenW * spreadFrac;
-    const spacing = chars.length > 1 ? totalSpread / (chars.length - 1) : 0;
-    const startX = cx - totalSpread / 2;
-    const fontSize = this.config.fontSize ?? 52;
-
-    for (let i = 0; i < chars.length; i++) {
-      const ct = new PIXI.Text({
-        text: chars[i],
-        style: {
-          fontFamily: '"Noto Serif JP", serif',
-          fontSize,
-          fontWeight: '900' as PIXI.TextStyleFontWeight,
-          fill: '#ffffff',
-        },
-      });
-      ct.anchor.set(0.5);
-      ct.x = startX + i * spacing;
-      const baseY = cy + (i % 2 === 0 ? -this.staggerY : this.staggerY);
-      ct.y = baseY + 60;
-      ct.alpha = 0;
-      ct.scale.set(0);
-      this.charContainer.addChild(ct);
-      this.charTexts.push(ct);
-      this.charBaseY.push(baseY);
-    }
   }
 
   update(ctx: UpdateContext): void {
@@ -120,39 +71,9 @@ export class CenteredSquares extends BaseEffect {
     for (const layer of this.layers) {
       layer.container.x = cx;
       layer.container.y = cy;
-
-      const rot = ctx.time * layer.rotSpeed * speed;
-      layer.container.rotation = rot;
-
+      layer.container.rotation = ctx.time * layer.rotSpeed * speed;
       const scalePulse = 0.75 + Math.abs(Math.sin(ctx.time * 0.4 * speed + layer.scalePhase)) * 0.55 * intensity;
       layer.container.scale.set(scalePulse);
-    }
-
-    if (ctx.currentText !== this.prevText) {
-      this.prevText = ctx.currentText;
-      this.textChangeTime = ctx.time;
-      this.rebuildChars(ctx.currentText, cx, cy, ctx.screenWidth);
-    }
-
-    const elapsed = ctx.time - this.textChangeTime;
-    for (let i = 0; i < this.charTexts.length; i++) {
-      const delay = i * 0.15;
-      const t = Math.max(0, elapsed - delay);
-
-      // Scale: elastic overshoot
-      const raw = Math.min(1, t * 3);
-      const elastic = raw < 1
-        ? raw * (1 + 0.4 * Math.sin(raw * Math.PI * 3) * (1 - raw))
-        : 1;
-
-      // Y: fly up from below
-      const yProgress = Math.min(1, t * 4);
-      const yEased = 1 - (1 - yProgress) * (1 - yProgress);
-
-      this.charTexts[i].alpha = Math.min(1, t * 5);
-      this.charTexts[i].scale.set(elastic * 1.1);
-      this.charTexts[i].y = this.charBaseY[i] + 60 * (1 - yEased);
-      this.charTexts[i].rotation = (1 - Math.min(1, t * 2.5)) * 0.6 * (i % 2 === 0 ? 1 : -1);
     }
   }
 }

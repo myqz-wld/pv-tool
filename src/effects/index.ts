@@ -1,5 +1,5 @@
 // PV Tool — Copyright (c) 2026 DanteAlighieri13210914
-// Licensed under AGPL-3.0. For commercial use, see COMMERCIAL.md
+// Licensed under Non-Commercial License. See LICENSE for terms.
 
 import * as PIXI from 'pixi.js';
 import { BaseEffect } from './base';
@@ -26,6 +26,7 @@ import { DashedGuideLines } from './dashedGuideLines';
 import { DiagonalHatch } from './diagonalHatch';
 import { ScreenBorder } from './screenBorder';
 import { CenteredSquares } from './centeredSquares';
+import { WaveText } from './waveText';
 import { DiagonalSplit } from './diagonalSplit';
 import { LayeredText } from './layeredText';
 import { FallingText } from './fallingText';
@@ -106,6 +107,7 @@ register('dashedGuideLines', DashedGuideLines);
 register('diagonalHatch', DiagonalHatch);
 register('screenBorder', ScreenBorder);
 register('centeredSquares', CenteredSquares);
+register('waveText', WaveText);
 register('diagonalSplit', DiagonalSplit);
 register('layeredText', LayeredText);
 register('fallingText', FallingText);

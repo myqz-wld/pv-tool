@@ -47,6 +47,7 @@ export const ja: Record<LocaleKey, string> = {
   'stop': '停止 STOP',
   'packing': 'パッキング中...',
   'alpha_export': '透明背景出力 Alpha',
+  'alpha_tip': 'AE/CapCutへのインポート用。PNG連番でエクスポートします。不要な場合はチェック不要です。',
   'srt_import': '字幕タイムライン SRT',
   'lrc_import': 'LRC読込',
   'timer_label': 'タイマー Time',

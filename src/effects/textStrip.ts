@@ -1,5 +1,5 @@
 // PV Tool — Copyright (c) 2026 DanteAlighieri13210914
-// Licensed under AGPL-3.0. For commercial use, see COMMERCIAL.md
+// Licensed under Non-Commercial License. See LICENSE for terms.
 
 import * as PIXI from 'pixi.js';
 import { BaseEffect } from './base';
@@ -34,7 +34,7 @@ export class TextStrip extends BaseEffect {
     this.stripContainer.addChild(this.textContainer);
     this.stripContainer.rotation = rotation;
 
-    const text = this.config._userText || this.config.text || 'ヨルシカ';
+    const text = this.config._userText ?? this.config.text ?? '';
     this.buildText(text);
   }
 
@@ -64,7 +64,7 @@ export class TextStrip extends BaseEffect {
   }
 
   update(ctx: UpdateContext): void {
-    const newText = ctx.currentText || this.config.text || 'ヨルシカ';
+    const newText = ctx.currentText ?? this.config.text ?? '';
 
     if (newText !== this.displayedText && this.fadeState === 'idle') {
       this.pendingText = newText;

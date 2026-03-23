@@ -1,5 +1,5 @@
 // PV Tool — Copyright (c) 2026 DanteAlighieri13210914
-// Licensed under AGPL-3.0. For commercial use, see COMMERCIAL.md
+// Licensed under Non-Commercial License. See LICENSE for terms.
 
 import * as PIXI from 'pixi.js';
 import { BaseEffect } from './base';
@@ -17,7 +17,7 @@ export class HeroText extends BaseEffect {
   private fadeState: 'idle' | 'fadeOut' | 'fadeIn' = 'idle';
 
   protected setup(): void {
-    const text = this.config._userText || this.config.text || '春を告げる';
+    const text = this.config._userText ?? this.config.text ?? '';
     const fontSize = this.config.fontSize ?? 120;
     const fontFamily = this.config.fontFamily ?? '"Noto Serif JP", "Yu Mincho", "MS Mincho", serif';
     const color = resolveColor(this.config.color ?? '$text', this.palette);
@@ -41,7 +41,7 @@ export class HeroText extends BaseEffect {
   }
 
   update(ctx: UpdateContext): void {
-    const newText = ctx.currentText || this.config.text || '春を告げる';
+    const newText = ctx.currentText ?? this.config.text ?? '';
 
     if (newText !== this.displayedText && this.fadeState === 'idle') {
       this.pendingText = newText;

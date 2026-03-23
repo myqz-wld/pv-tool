@@ -1,5 +1,5 @@
 // PV Tool — Copyright (c) 2026 DanteAlighieri13210914
-// Licensed under AGPL-3.0. For commercial use, see COMMERCIAL.md
+// Licensed under Non-Commercial License. See LICENSE for terms.
 
 import * as PIXI from 'pixi.js';
 import { BaseEffect } from './base';
@@ -26,7 +26,7 @@ export class TextCards extends BaseEffect {
   protected setup(): void {}
 
   update(ctx: UpdateContext): void {
-    const text = ctx.currentText || this.config.text || '春を告げる';
+    const text = ctx.currentText ?? this.config.text ?? '';
     const cardColor = resolveColor(this.config.cardColor ?? '$primary', this.palette);
     const textColor = resolveColor(this.config.textColor ?? '$background', this.palette);
     const fontSize = this.config.fontSize ?? 80;

@@ -1,5 +1,5 @@
 // PV Tool — Copyright (c) 2026 DanteAlighieri13210914
-// Licensed under AGPL-3.0. For commercial use, see COMMERCIAL.md
+// Licensed under Non-Commercial License. See LICENSE for terms.
 
 import type { TemplateConfig } from '../core/types';
 
@@ -34,6 +34,13 @@ export const geometricTemplate: TemplateConfig = {
         borderColor: '$primary',
         midColor: '$primary',
         innerColor: '$secondary',
+      },
+    },
+    {
+      type: 'waveText',
+      layer: 'text',
+      config: {
+        color: '#ffffff',
         fontSize: 52,
         charSpreadFrac: 0.5,
         staggerY: 18,

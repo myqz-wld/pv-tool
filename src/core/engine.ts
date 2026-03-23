@@ -1,5 +1,5 @@
 // PV Tool — Copyright (c) 2026 DanteAlighieri13210914
-// Licensed under AGPL-3.0. For commercial use, see COMMERCIAL.md
+// Licensed under Non-Commercial License. See LICENSE for terms.
 
 import * as PIXI from 'pixi.js';
 import type { TemplateConfig, UpdateContext, ColorPalette, LayerType, MotionTargetInfo, LyricLine } from './types';
@@ -31,7 +31,7 @@ export class PVEngine {
 
   private _animationSpeed = 2;
   private _motionIntensity = 1;
-  private textSegments: string[] = ['春を告げる'];
+  private textSegments: string[] = [''];
   private lyricTimeline: LyricLine[] | null = null;
   private lyricOffsetSeconds = 0;
   private lyricCursor = 0;
@@ -236,12 +236,6 @@ export class PVEngine {
         this._tilt = template.postfx.tilt ?? 0;
         this.glitch = template.postfx.glitch ?? 0;
         this.hueShift = template.postfx.hueShift ?? 0;
-      } else {
-        this._shake = 0;
-        this._zoom = 0;
-        this._tilt = 0;
-        this.glitch = 0;
-        this.hueShift = 0;
       }
 
       this.syncOutline();

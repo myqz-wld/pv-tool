@@ -1,34 +1,36 @@
 # Commercial License
 
-## Dual Licensing
+## License Overview
 
-PV Tool is available under two licenses:
+PV Tool is released under a **Non-Commercial License** (see [LICENSE](LICENSE)).
 
-1. **AGPL-3.0** (open source) — free for use in projects that comply with the AGPL-3.0 terms, including full source disclosure
-2. **Commercial License** (paid) — for use in proprietary, closed-source, or commercial products without AGPL obligations
+All commercial use is prohibited without a separate commercial license agreement.
+If you wish to use PV Tool in any commercial context, you must obtain a paid commercial license from the author.
 
 ## When You Need a Commercial License
 
 You need a commercial license if **any** of the following apply:
 
-- You are integrating PV Tool (or derivative works) into a **closed-source product**
-- You are distributing PV Tool as part of a **proprietary application** (desktop, mobile, web service, SaaS)
-- You are using PV Tool in a **commercial service** where users interact with it over a network, and you do not wish to release your source code under AGPL-3.0
-- You are embedding PV Tool's rendering engine, effects, or templates into a **paid product**
+- You are using PV Tool (or derivative works) in or as part of a **product or service sold for a fee**
+- You are offering PV Tool as a **SaaS, PaaS, or any hosted/managed service**
+- You are providing **paid services** to third parties using PV Tool (e.g. video production, live-streaming services, content creation)
+- You are embedding PV Tool's rendering engine, effects, or templates into a **commercial product, plugin, or application**
+- You are using PV Tool within an **organization that generates revenue** from activities directly facilitated by the Software
 
 ### Examples requiring a commercial license:
 
-- A commercial video editing application (e.g. Clip Studio, After Effects plugins) that bundles PV Tool effects
+- A commercial video editing application that bundles PV Tool effects
 - A SaaS platform offering PV-style video generation to paying users
+- A live-streaming service using PV Tool for real-time visual overlays
 - A mobile app that uses PV Tool's rendering engine internally
 - A game or interactive installation sold commercially
 
 ### Examples that do NOT require a commercial license:
 
 - Personal or hobbyist PV / music video creation
-- Open-source projects that comply with AGPL-3.0 (full source disclosure)
-- Educational or research use
-- Non-commercial community tools that release source under AGPL-3.0
+- Educational or academic research
+- Non-commercial community projects
+- Creating personal content published freely and not behind a paywall
 
 ## Commercial License Terms
 
@@ -37,13 +39,13 @@ You need a commercial license if **any** of the following apply:
 A commercial license grants you a **non-exclusive, non-transferable** right to:
 
 - Use, modify, and distribute PV Tool in your proprietary products
-- Create derivative works without the obligation to disclose source code
-- Redistribute compiled/bundled versions without AGPL-3.0 notices to end users
+- Create derivative works without non-commercial restrictions
+- Redistribute compiled/bundled versions in commercial products
 
 ### What's Included
 
 - License to use all source code, effects, and templates in this repository
-- Freedom from AGPL-3.0 copyleft obligations for your product
+- Freedom from non-commercial restrictions for your product
 - Right to modify and create derivative works
 
 ### What's NOT Included
@@ -65,7 +67,6 @@ Commercial license pricing is determined on a case-by-case basis depending on:
 For commercial licensing inquiries, please contact:
 
 - **GitHub**: [@DanteAlighieri13210914](https://github.com/DanteAlighieri13210914)
-- **Email**: *(add your contact email here)*
 
 ## Authorship
 

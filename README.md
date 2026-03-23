@@ -80,13 +80,15 @@ Open the browser and use the controls:
 
 ## License
 
-This project is dual-licensed:
+> **Due to commercial misuse by vtblive and their refusal to negotiate a proper license, this project has been relicensed from AGPL-3.0 to a Non-Commercial License effective 2026/3/24. This change applies to all subsequent updates.**
+>
+> 由于 vtblive 的商业滥用行为及其拒绝进行合理的授权协商，本项目自 2026/3/24 起由 AGPL-3.0 变更为 Non-Commercial License。此变更适用于此日期之后的所有版本更新。
 
-- **Open source** — [GNU Affero General Public License v3.0](LICENSE) (AGPL-3.0)
-- **Commercial** — see [COMMERCIAL.md](COMMERCIAL.md) for paid license terms
+- **Non-Commercial License** — see [LICENSE](LICENSE) for full terms
+- **Commercial License** — see [COMMERCIAL.md](COMMERCIAL.md) for paid license terms
 
-Free for personal use, community projects, and open-source work under AGPL-3.0.
-Commercial use in proprietary/closed-source products requires a paid commercial license.
+Free for personal use, educational research, and non-commercial community projects.
+Any commercial use requires a paid commercial license from the author.
 
 ## Author
 

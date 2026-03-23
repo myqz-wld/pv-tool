@@ -1,5 +1,5 @@
 // PV Tool — Copyright (c) 2026 DanteAlighieri13210914
-// Licensed under AGPL-3.0. For commercial use, see COMMERCIAL.md
+// Licensed under Non-Commercial License. See LICENSE for terms.
 
 import * as PIXI from 'pixi.js';
 import { BaseEffect } from './base';
@@ -26,9 +26,9 @@ export class ScatteredText extends BaseEffect {
     if (this.initialized) return;
     this.initialized = true;
 
-    const userText = this.config._userText || '';
-    const defaultChars = 'つもにはでをがのへとかられ';
-    const chars = userText || this.config.chars || defaultChars;
+    const userText = this.config._userText ?? '';
+    const chars = userText || this.config.chars || '';
+    if (chars.length === 0) return;
     const count = this.config.count ?? 15;
     const color = resolveColor(this.config.color ?? '$secondary', this.palette);
     const fontFamily = this.config.fontFamily ?? '"Noto Serif JP", "Yu Mincho", serif';

@@ -1,5 +1,5 @@
 // PV Tool — Copyright (c) 2026 DanteAlighieri13210914
-// Licensed under AGPL-3.0. For commercial use, see COMMERCIAL.md
+// Licensed under Non-Commercial License. See LICENSE for terms.
 
 import './style.css';
 import { PVEngine } from './core/engine';
@@ -133,7 +133,7 @@ app.innerHTML = `
         <div class="file-pick">
           <button class="btn btn-sm" id="audio-pick-btn">${t('choose_file')}</button>
           <span class="file-pick-name" id="audio-pick-name">${t('no_file')}</span>
-          <input type="file" id="audio-input" accept="audio/*" hidden>
+          <input type="file" id="audio-input" accept="audio/*,.mp3,.m4a,.aac,.ogg,.wav,.flac,.wma,.opus" hidden>
         </div>
       </div>
 
@@ -227,7 +227,7 @@ app.innerHTML = `
         <div class="control-group">
           <label class="effect-toggle">
             <input type="checkbox" id="alpha-toggle">
-            <span>${t('alpha_export')}</span>
+            <span>${t('alpha_export')}</span><span class="help-tip" data-tip="${t('alpha_tip')}">?</span>
           </label>
         </div>
 
@@ -476,6 +476,8 @@ function syncPostfxSliders() {
   hu.value = String(engine.hueShift); hv.textContent = `${engine.hueShift.toFixed(0)}°`;
 }
 
+const syncChannel = new BroadcastChannel('pv-tool-sync');
+
 templateSelect.addEventListener('change', () => {
   const val = templateSelect.value;
   if (val === 'custom') {
@@ -497,6 +499,33 @@ templateSelect.addEventListener('change', () => {
     syncOpacitySlider();
     syncPostfxSliders();
   }
+  updateTemplateButtons();
+  if (val !== 'custom') {
+    syncChannel.postMessage({ type: 'template', value: val });
+  }
+});
+
+syncChannel.addEventListener('message', (ev) => {
+  const { type, value } = ev.data;
+  if (type !== 'template' || value === 'custom') return;
+  if (value.startsWith('user-')) {
+    const idx = parseInt(value.split('-')[1]);
+    if (idx >= 0 && idx < customTemplates.length) {
+      engine.loadTemplate(customTemplates[idx]);
+      templateSelect.value = value;
+    }
+  } else {
+    const idx = parseInt(value);
+    if (!isNaN(idx) && idx >= 0 && idx < templates.length) {
+      engine.loadTemplate(templates[idx]);
+      templateSelect.value = String(idx);
+    }
+  }
+  isCustomMode = false;
+  customPanel.style.display = 'none';
+  syncSpeedSlider();
+  syncOpacitySlider();
+  syncPostfxSliders();
   updateTemplateButtons();
 });
 

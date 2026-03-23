@@ -45,6 +45,7 @@ export const zh = {
   'stop': '停止 STOP',
   'packing': '打包中...',
   'alpha_export': '透明背景导出 Alpha',
+  'alpha_tip': '用于导入AE/剪映，导出格式为PNG序列打包，如无需要请勿点选',
   'srt_import': '字幕时间轴 SRT',
   'lrc_import': '导入 LRC',
   'timer_label': '计时 Time',

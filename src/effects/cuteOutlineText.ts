@@ -1,5 +1,5 @@
 // PV Tool — Copyright (c) 2026 DanteAlighieri13210914
-// Licensed under AGPL-3.0. For commercial use, see COMMERCIAL.md
+// Licensed under Non-Commercial License. See LICENSE for terms.
 
 import * as PIXI from 'pixi.js';
 import { BaseEffect } from './base';
@@ -18,7 +18,7 @@ export class CuteOutlineText extends BaseEffect {
   private fadeState: 'idle' | 'fadeOut' | 'fadeIn' = 'idle';
 
   protected setup(): void {
-    const text = this.config._userText || this.config.text || 'もうどくちゅうい';
+    const text = this.config._userText ?? this.config.text ?? '';
     const fontSize = this.config.fontSize ?? 80;
     const fontFamily = this.config.fontFamily ?? '"Noto Sans JP", "Hiragino Kaku Gothic Pro", sans-serif';
     const fillColor = resolveColor(this.config.fillColor ?? '#fab2b5', this.palette);
@@ -42,7 +42,7 @@ export class CuteOutlineText extends BaseEffect {
   }
 
   update(ctx: UpdateContext): void {
-    const newText = ctx.currentText || this.config.text || 'もうどくちゅうい';
+    const newText = ctx.currentText ?? this.config.text ?? '';
 
     // 文字切换淡入淡出效果
     if (newText !== this.displayedText && this.fadeState === 'idle') {

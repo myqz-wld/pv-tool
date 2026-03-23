@@ -1,5 +1,5 @@
 // PV Tool — Copyright (c) 2026 DanteAlighieri13210914
-// Licensed under AGPL-3.0. For commercial use, see COMMERCIAL.md
+// Licensed under Non-Commercial License. See LICENSE for terms.
 
 import * as PIXI from 'pixi.js';
 import { BaseEffect } from './base';
@@ -160,7 +160,7 @@ export class StaggeredText extends BaseEffect {
   }
 
   update(ctx: UpdateContext): void {
-    const text = ctx.currentText || this.config.text || '春を告げる';
+    const text = ctx.currentText ?? this.config.text ?? '';
     const w = ctx.screenWidth;
     const h = ctx.screenHeight;
     const modeDuration = this.config.modeDuration ?? 3;

@@ -1,5 +1,5 @@
 // PV Tool — Copyright (c) 2026 DanteAlighieri13210914
-// Licensed under AGPL-3.0. For commercial use, see COMMERCIAL.md
+// Licensed under Non-Commercial License. See LICENSE for terms.
 
 import type { LayerType } from './types';
 
@@ -60,6 +60,7 @@ export const effectCatalog: EffectPreset[] = [
   { type: 'formulaText', label: '公式文字 Formula', category: '文字', layer: 'text', config: { color: '$text', count: 18 } },
   { type: 'fallingText', label: '文字雨 Falling', category: '文字', layer: 'decoration', config: { color: '$accent', count: 30 } },
   { type: 'staggeredText', label: '错落文字 Staggered', category: '文字', layer: 'text', config: { color: '#ffffff', fontSize: 64, modeDuration: 3.5 } },
+  { type: 'waveText', label: '起伏文字 Wave', category: '文字', layer: 'text', config: { color: '#ffffff', fontSize: 52, staggerY: 18, charSpreadFrac: 0.5 } },
 
   // 叠加效果 Overlay
   { type: 'colorMask', label: '颜色蒙版 Mask', category: '叠加效果', layer: 'overlay', config: { color: '$accent', alpha: 0.3 } },
