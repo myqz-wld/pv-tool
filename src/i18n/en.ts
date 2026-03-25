@@ -98,6 +98,7 @@ export const en: Record<LocaleKey, string> = {
   'tpl_sweetPink': 'Sweet Pink',
   'tpl_flyMeToTheMoon': 'Fly Me to the Moon',
   'tpl_kawaiPixel': 'Kawaii Pixel',
+  'tpl_crimeScene': 'Crime Scene',
 
   // File picker
   'choose_file': 'Choose File',
@@ -206,6 +207,9 @@ export const en: Record<LocaleKey, string> = {
   'fx_desktopIcon': 'Desktop Icon',
   'fx_pixelBackground': 'Pixel Background',
   'fx_pixelTypewriter': 'Pixel Typewriter',
+  'fx_crimeTape': 'Crime Tape',
+  'fx_bloodSplatter': 'Blood Splatter',
+  'fx_victimOutline': 'Victim Outline',
 
   // Hint messages
   'hint_press': 'Press',
