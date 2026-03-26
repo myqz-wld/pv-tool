@@ -152,7 +152,7 @@ export class PVEngine {
         }
       }
 
-      this.update(this._time, this._paused ? 0 : ticker.deltaTime / this.app.ticker.maxFPS);
+      this.update(this._time, this._paused ? 0 : ticker.deltaTime / 60);
     });
   }
 

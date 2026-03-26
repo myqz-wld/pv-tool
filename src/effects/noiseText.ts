@@ -12,7 +12,7 @@ interface TextBlock {
   lines: string[];
   fontSize: number;
   alpha: number;
-  lifetime: number;  // frames
+  lifetime: number;  // seconds
   born: number;      // ctx.time at spawn
   hasBackground: boolean;
   inverted: boolean;
@@ -69,7 +69,7 @@ export class NoiseText extends BaseEffect {
       lines,
       fontSize: 10 + Math.floor(Math.random() * 14),
       alpha: 0.5 + Math.random() * 0.5,
-      lifetime: 30 + Math.floor(Math.random() * 120),
+      lifetime: 0.5 + Math.random() * 2,
       born: time,
       hasBackground: Math.random() < 0.6,
       inverted: Math.random() < 0.3,
@@ -94,7 +94,7 @@ export class NoiseText extends BaseEffect {
     // Update and render
     for (let i = this.blocks.length - 1; i >= 0; i--) {
       const block = this.blocks[i];
-      const age = (ctx.time - block.born) * ctx.fps;  // frames elapsed
+      const age = ctx.time - block.born;  // seconds
 
       if (age > block.lifetime || age < 0) {
         this.blocks[i] = this.spawnBlock(w, h, ctx.time);
@@ -104,8 +104,8 @@ export class NoiseText extends BaseEffect {
       // Flicker: occasionally skip rendering
       if (ctx.deltaTime > 0 && Math.random() < 0.08) continue;
 
-      // Occasionally corrupt a character (~every 5 frames)
-      if (Math.floor(age) % 5 === 0 && Math.random() < 0.3) {
+      // Occasionally corrupt a character (~every 0.083s)
+      if (Math.floor(age / 0.083) % 5 === 0 && Math.random() < 0.3) {
         const lineIdx = Math.floor(Math.random() * block.lines.length);
         const line = block.lines[lineIdx];
         const charIdx = Math.floor(Math.random() * line.length);
@@ -115,8 +115,8 @@ export class NoiseText extends BaseEffect {
           line.substring(charIdx + 1);
       }
 
-      const fadeIn = Math.min(1, age / 5);
-      const fadeOut = Math.min(1, (block.lifetime - age) / 8);
+      const fadeIn = Math.min(1, age / 0.083);
+      const fadeOut = Math.min(1, (block.lifetime - age) / 0.133);
       const a = block.alpha * fadeIn * fadeOut;
 
       const textCol = block.inverted ? bgColor : color;
